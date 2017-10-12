@@ -1,0 +1,10 @@
+{
+  "name": "cdsr-wikipedia",
+  "version": "1.0.0",
+  "description": "Scripts to facilitate cross-referencing the Cochrane Database of Systematic Reviews with Wikipedia articles",
+  "author": "Gert van Valkenhoef <gvanvalkenhoef@cochrane.org>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.5.0"
+  }
+}
