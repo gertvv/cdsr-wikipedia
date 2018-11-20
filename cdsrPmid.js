@@ -52,7 +52,7 @@ parser.on('finish', () => {
       }
     });
   }, (err, res) => {
-    const stringifier = csv.stringify({ columns: [ "Review DOI", "Title", "PMID" ], quoted: true, header: true });
+    const stringifier = csv.stringify({ columns: [ "Review DOI", "Title", "Group Name", "PMID" ], quoted: true, header: true });
     const output = fs.createWriteStream('reviews-not-withdrawn-pmid.csv', { encoding: 'utf-8' });
     stringifier.pipe(output);
     res.forEach((el) => { stringifier.write(el); });
