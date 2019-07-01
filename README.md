@@ -38,6 +38,10 @@ Review Status | Is | Active
 Version Stage | Is | Full Review
 ```
 
+By default Archie generates UTF-8 with BOM, which needs to be re-saved without BOM.
+
+The review document API unfortunately does not return the full DOI, otherwise it would be a good replacement for this manual step.
+
 Finding DOIs of cited Cochrane Reviews on Wikipedia
 ---------------------------------------------------
 
