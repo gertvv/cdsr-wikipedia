@@ -42,7 +42,7 @@ function getPageDois(page, callback) {
       
       const result = JSON.parse(body);
       const links = result.parse.externallinks;
-      const matches = links.map((url) => url.match(re)).filter((m) => !!m).map((m) => "10.1002/" + m[1]);
+      const matches = links.map((url) => url.match(re)).filter((m) => !!m).map((m) => "10.1002/" + m[1].substring(0, 17).toUpperCase() + m[1].substring(17).toLowerCase());
       callback(null, matches.map((m) => { return {
         pageid: page.pageid,
         title: page.title,
@@ -52,6 +52,7 @@ function getPageDois(page, callback) {
   });
 }
 
+//getPageDois({ pageid: '25875', title: 'Rheumatoid arthritis' }, function(err, res) { console.log(err, res); });
 //getPageDois({ pageid: '1537', title: 'Acupuncture' }, function(err) { console.error(err); });
 
 search([], 0, (err, result) => {
