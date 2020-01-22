@@ -48,10 +48,10 @@ Finding DOIs of cited Cochrane Reviews on Wikipedia
 Run
 
 ```
-node wikipediaDoi
+node wikipediaDoi en
 ```
 
-This will generate a file `wikipedia-dois.csv`.
+This will generate a file `wikipedia-dois-en.csv`.
 
 Cross-referencing the files
 ---------------------------
@@ -59,7 +59,7 @@ Cross-referencing the files
 Run
 
 ```
-node crossReference
+node crossReference en
 ```
 
 License

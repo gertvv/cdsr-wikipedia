@@ -4,9 +4,11 @@ const csv = require('csv');
 const async = require('async');
 const streamToString = require('./streamToString');
 
+const lang = process.argv[2];
+
 function search(acc, offset, callback) {
   const query = 'insource:doi=10.1002/14651858';
-  const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${query}&srwhat=text&srlimit=500&sroffset=${offset}`;
+  const url = `https://${lang}.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${query}&srwhat=text&srlimit=500&sroffset=${offset}`;
   https.get(url, (res) => {
     if (res.statusCode != 200) {
       return callback(`HTTP code ${res.statusCode}`);
@@ -30,7 +32,7 @@ function search(acc, offset, callback) {
 const re = /(14651858.(CD|MR)[0-9]{6}(.pub[0-9]+)?)/i; // not including "10.1002/" prefix to avoid dealing with urlencoding variations
 function getPageDois(page, callback) {
   console.log(page.title);
-  const url = `https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=externallinks&pageid=${page.pageid}`;
+  const url = `https://${lang}.wikipedia.org/w/api.php?action=parse&format=json&prop=externallinks&pageid=${page.pageid}`;
   https.get(url, (res) => {
     if (res.statusCode != 200) {
       return callback(`HTTP code ${res.statusCode}`);
@@ -61,7 +63,7 @@ search([], 0, (err, result) => {
   }
   async.concatSeries(result, getPageDois, (err, mapped) => {
     csv.stringify(mapped, { columns: [ 'pageid', 'title', 'doi' ], quoted: true, header: true }, (err, csv) => {
-      fs.writeFileSync('wikipedia-dois.csv', csv, { 'encoding': 'utf-8' });
+      fs.writeFileSync(`wikipedia-dois-${lang}.csv`, csv, { 'encoding': 'utf-8' });
     });
   });
 });
