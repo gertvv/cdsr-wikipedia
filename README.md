@@ -38,7 +38,7 @@ Review Status | Is | Active
 Version Stage | Is | Full Review
 ```
 
-By default Archie generates UTF-8 with BOM, which needs to be re-saved without BOM. Export to Excel and saving to CSV from Excel appears to be move performant/reliable, but also produced UTF-8 with BOM.
+By default Archie generates UTF-8 with BOM, which needs to be re-saved without BOM. Export to Excel and saving to CSV from Excel appears to be more performant/reliable, but also produced UTF-8 with BOM.
 
 The review document API unfortunately does not return the full DOI, otherwise it would be a good replacement for this manual step.
 
