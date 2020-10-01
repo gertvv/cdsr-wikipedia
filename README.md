@@ -39,6 +39,7 @@ INNER JOIN DocumentEJB AS d ON r.document = d.uuid
 INNER JOIN DocumentVersionEJB AS dv ON r.lastCitationVersion = dv.uuid
 INNER JOIN CochraneEntityEJB as e ON d.entity = e.uuid
 WHERE r.status = 0 AND dv.reviewStage = 3
+  AND dv.journalIssue >= '2011'
 ORDER BY dv.journalIssue DESC;
 ```
 
