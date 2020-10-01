@@ -12,7 +12,7 @@ fs.mkdirSync(dir);
 
 function outputByGroup(prefix, data) {
   const grouped = _.groupBy(data, 'Group Name');
-  const content = _.mapValues(grouped, (g, name) => `== ${name} ==\n\n` + _.join(_.map(g, (r) => `${r.Title} PMID ${r.PMID} https://doi.org/${r['Review DOI']}`), '\n\n'));
+  const content = _.mapValues(grouped, (g, name) => `== ${name} ==\n\n` + _.join(_.map(g, (r) => `${r['Last Citation Change']} ${r.Title} PMID ${r.PMID} https://doi.org/${r['Review DOI']}`), '\n\n'));
   for (let groupName in content) {
     const groupNameClean = groupName.replace(/\W/g, '_');
     fs.writeFileSync(`${prefix}${groupNameClean}.txt`, content[groupName]);
@@ -32,7 +32,7 @@ async.parallel([
     'onWiki': wikiDoiStems.has(stem(review['Review DOI'])) ? 'TRUE' : 'FALSE'
   }));
   
-  const stringifier = csv.stringify({ columns: [ "Review DOI", "Title", "Group Name", "PMID", "onWiki" ], quoted: true, header: true });
+  const stringifier = csv.stringify({ columns: [ "Review DOI", "Last Citation Change", "Title", "Group Name", "PMID", "onWiki" ], quoted: true, header: true });
   const output = fs.createWriteStream(`${dir}/reviews-on-wikipedia-${lang}.csv`, { encoding: 'utf-8' });
   stringifier.pipe(output);
   reviews.forEach((el) => { stringifier.write(el); });
