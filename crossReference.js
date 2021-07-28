@@ -19,6 +19,8 @@ function outputByGroup(prefix, data) {
   }
 }
 
+const issueMap = { 'A': '10', 'B': '11', 'C': '12' };
+
 async.parallel([
   (cb) => parseCsv('doi-pmid.csv', cb),
   (cb) => parseCsv(`wikipedia-dois-${lang}.csv`, cb),
@@ -28,6 +30,11 @@ async.parallel([
   const stem = (doi) => doi.substring(0, 25);
   const wikiDoiStems = new Set(_.map(wiki, (r) => stem(r.doi)));
   reviews = _.map(reviews, (review) => _.extend(review, {
+    'Last Citation Change': ((issue) => {
+      if (issue.length != 6) return issue;
+      const m = issue.charAt(5);
+      return issue.substring(0, 5) + (issueMap[m] || m);
+    })(review['Last Citation Change']),
     'PMID': doiToPmid[review['Review DOI']],
     'onWiki': wikiDoiStems.has(stem(review['Review DOI'])) ? 'TRUE' : 'FALSE'
   }));
