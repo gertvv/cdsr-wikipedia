@@ -65,6 +65,18 @@ Run
 node crossReference en
 ```
 
+Running many languages
+----------------------
+
+MS PowerShell:
+
+```
+Foreach ($lang in "de","en","es","nl","fr","ms") {
+  node wikipediaDoi $lang
+  node crossReference $lang
+}
+```
+
 License
 -------
 
