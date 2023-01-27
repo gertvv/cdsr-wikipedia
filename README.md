@@ -71,7 +71,7 @@ Running many languages
 MS PowerShell:
 
 ```
-Foreach ($lang in "de","en","es","nl","fr","ms") {
+Foreach ($lang in "de","en","es","nl","fr","ms","fa") {
   node wikipediaDoi $lang
   node crossReference $lang
 }
