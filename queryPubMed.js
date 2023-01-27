@@ -8,8 +8,8 @@ const _ = require('lodash');
 const api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 const pageSize = 500;
 
-function queryForCDSR(callback) {
-  const url = `${api}/esearch.fcgi?db=pubmed&term="Cochrane%20Database%20Syst%20Rev"%5bjour%5d&retmode=json&usehistory=y`;
+function queryForCDSR(year0, year1, callback) {
+  const url = `${api}/esearch.fcgi?db=pubmed&term=%28%22${year0}%2F01%2F01%22%5BDate%20-%20Publication%5D%20%3A%20%22${year1}%2F12%2F31%22%5BDate%20-%20Publication%5D%29%20AND%20%22Cochrane%20Database%20Syst%20Rev%22%5Bjour%5D&retmode=json&usehistory=y`;
   https.get(url, (res) => {
     if (res.statusCode != 200) {
       callback(`HTTP code ${res.statusCode}`);
@@ -61,19 +61,31 @@ function getResults(info, callback) {
   );
 }
 
-queryForCDSR((err, res) => {
-  if (err) {
-    return console.error(err);
+function run() {
+  const stringifier = csv.stringify({ columns: [ "DOI", "PMID" ], quoted: true, header: true });
+  const output = fs.createWriteStream('doi-pmid.csv', { encoding: 'utf-8' });
+  stringifier.pipe(output);
+  
+  function batch([year0, year1], callback) {
+    async.waterfall([(cb) => queryForCDSR(year0, year1, cb), getResults], (err, res) => {
+      if (err) {
+        return callback(err);
+      }
+      res.forEach((el) => { stringifier.write(el); });
+      console.log(`DONE - ${year0}-${year1}`);
+      callback(null);
+    });
   }
-  console.log(res);
-  getResults(res, (err, res) => {
+  
+  batches = [[1990, 2009], [2010, 2019], [2020, 2029]];
+  async.eachSeries(batches, batch, (err) => {
     if (err) {
-      return console.error(err);
+      console.log(err);
+      output.close();
+    } else {
+      output.close();
     }
-    const stringifier = csv.stringify({ columns: [ "DOI", "PMID" ], quoted: true, header: true });
-    const output = fs.createWriteStream('doi-pmid.csv', { encoding: 'utf-8' });
-    stringifier.pipe(output);
-    res.forEach((el) => { stringifier.write(el); });
-    console.log("DONE");
   });
-});
+}
+
+run();
